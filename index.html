@@ -1,12 +1,1168 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CyberLife</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberLife — Humanoidná podpora pre skutočný život</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cyber-blue: #3B6CFF;
+      --cyber-cyan: #2EE6FF;
+      --cyber-violet: #B56CFF;
+      --cyber-dark: #0B0C10;
+      --cyber-light: #F6F7FA;
+      --cyber-text: #101114;
+      --cyber-text-secondary: #6B7280;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cyber-light);
+      color: var(--cyber-text);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    nav.scrolled {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-cyan));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--cyber-text-secondary);
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--cyber-blue);
+    }
+
+    .btn-primary {
+      background: var(--cyber-blue);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(59, 108, 255, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--cyber-text);
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+      border: 2px solid rgba(59, 108, 255, 0.3);
+      cursor: pointer;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--cyber-blue);
+      color: var(--cyber-blue);
+    }
+
+    /* Mouse Glow */
+    .mouse-glow {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(circle, rgba(59, 108, 255, 0.15) 0%, rgba(59, 108, 255, 0) 70%);
+      filter: blur(40px);
+      transition: transform 0.8s ease-out;
+    }
+
+    /* Sections */
+    section {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.8) 0%, rgba(246,247,250,0) 70%);
+    }
+
+    .hero-content {
+      text-align: center;
+      z-index: 10;
+      position: relative;
+      padding: 2rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+      color: var(--cyber-text-secondary);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+
+    .hero-label {
+      font-size: 0.75rem;
+      color: var(--cyber-blue);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+      display: block;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Android Image */
+    .android-container {
+      position: absolute;
+      left: 50%;
+      top: 55%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+      transition: transform 0.6s ease-out;
+    }
+
+    .android-container img {
+      height: 70vh;
+      width: auto;
+      filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.1));
+    }
+
+    /* Orbital Ring */
+    .orbital-ring {
+      position: absolute;
+      left: 50%;
+      top: 55%;
+      transform: translate(-50%, -50%) rotateX(60deg);
+      width: 70vw;
+      height: 30vh;
+      border: 1px solid rgba(59, 108, 255, 0.2);
+      border-radius: 50%;
+      z-index: 1;
+      animation: orbit 30s linear infinite;
+    }
+
+    @keyframes orbit {
+      from { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(0deg); }
+      to { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(360deg); }
+    }
+
+    /* Particles */
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(59, 108, 255, 0.4);
+      border-radius: 50%;
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Light Blobs */
+    .light-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.5;
+    }
+
+    .blob-1 {
+      width: 400px;
+      height: 400px;
+      background: rgba(59, 108, 255, 0.1);
+      top: 10%;
+      left: 10%;
+    }
+
+    .blob-2 {
+      width: 350px;
+      height: 350px;
+      background: rgba(46, 230, 255, 0.1);
+      bottom: 15%;
+      right: 15%;
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--cyber-text-secondary);
+      animation: bounce 2s infinite;
+      cursor: pointer;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-10px); }
+    }
+
+    .scroll-indicator span {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Feature Sections */
+    .feature-section {
+      padding: 6rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .feature-section.reverse {
+      direction: rtl;
+    }
+
+    .feature-section.reverse > * {
+      direction: ltr;
+    }
+
+    .feature-content h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .feature-content p {
+      color: var(--cyber-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-image {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-out;
+    }
+
+    .feature-image img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+    }
+
+    /* Radial Menu */
+    .radial-menu {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 2rem auto;
+    }
+
+    .radial-item {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 1rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(59, 108, 255, 0.1);
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .radial-item:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      border-color: var(--cyber-blue);
+      box-shadow: 0 8px 30px rgba(59, 108, 255, 0.2);
+    }
+
+    .radial-item svg {
+      width: 24px;
+      height: 24px;
+      color: var(--cyber-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .radial-item span {
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: block;
+    }
+
+    /* Capabilities Section */
+    .capabilities {
+      background: white;
+      padding: 6rem 2rem;
+    }
+
+    .capabilities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 3rem auto 0;
+    }
+
+    .capability-card {
+      padding: 2rem;
+      background: var(--cyber-light);
+      border-radius: 20px;
+      border: 1px solid rgba(59, 108, 255, 0.1);
+      transition: all 0.3s;
+    }
+
+    .capability-card:hover {
+      border-color: rgba(59, 108, 255, 0.3);
+      box-shadow: 0 10px 40px rgba(59, 108, 255, 0.1);
+      transform: translateY(-5px);
+    }
+
+    .capability-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(59, 108, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .capability-icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--cyber-blue);
+    }
+
+    .capability-card h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .capability-card p {
+      color: var(--cyber-text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* Safety Section */
+    .safety {
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .safety-header {
+      max-width: 700px;
+      margin: 0 auto 3rem;
+    }
+
+    .safety-header h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      margin-bottom: 1rem;
+    }
+
+    .safety-header p {
+      color: var(--cyber-text-secondary);
+      line-height: 1.6;
+    }
+
+    .safety-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .safety-card {
+      padding: 2.5rem 2rem;
+      background: white;
+      border-radius: 20px;
+      border: 1px solid rgba(59, 108, 255, 0.1);
+      transition: all 0.3s;
+    }
+
+    .safety-card:hover {
+      box-shadow: 0 15px 50px rgba(59, 108, 255, 0.1);
+    }
+
+    .safety-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, rgba(59, 108, 255, 0.1), rgba(46, 230, 255, 0.1));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+
+    .safety-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--cyber-blue);
+    }
+
+    .safety-card h3 {
+      margin-bottom: 0.75rem;
+    }
+
+    .safety-card p {
+      color: var(--cyber-text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* Contact Section */
+    .contact {
+      background: var(--cyber-dark);
+      color: white;
+      padding: 6rem 2rem;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    .contact-content h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 1rem;
+    }
+
+    .contact-content p {
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .stat h3 {
+      font-size: 2.5rem;
+      color: var(--cyber-blue);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat p {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .contact-form {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 2.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: white;
+      font-size: 0.95rem;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--cyber-blue);
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .form-group textarea {
+      resize: none;
+      min-height: 100px;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--cyber-dark);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .footer-manifest {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide-left {
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: all 0.8s ease-out;
+    }
+
+    .slide-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .slide-right {
+      opacity: 0;
+      transform: translateX(50px);
+      transition: all 0.8s ease-out;
+    }
+
+    .slide-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .scale-in {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s ease-out;
+    }
+
+    .scale-in.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .feature-section {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .feature-section.reverse {
+        direction: ltr;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .android-container img {
+        height: 50vh;
+      }
+
+      .radial-menu {
+        width: 250px;
+        height: 250px;
+      }
+
+      .radial-item {
+        min-width: 100px;
+        padding: 0.75rem;
+      }
+
+      .radial-item span {
+        font-size: 0.7rem;
+      }
+    }
+
+    /* Success Message */
+    .success-message {
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .success-message svg {
+      width: 64px;
+      height: 64px;
+      color: var(--cyber-blue);
+      margin-bottom: 1rem;
+    }
+
+    .success-message h3 {
+      margin-bottom: 0.5rem;
+    }
+
+    .success-message p {
+      color: rgba(255, 255, 255, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <!-- Mouse Glow -->
+  <div class="mouse-glow" id="mouseGlow"></div>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="logo">
+      <div class="logo-icon">C</div>
+      <span>CyberLife</span>
+    </div>
+    <div class="nav-links">
+      <a href="#assistance">Prístup</a>
+      <a href="#capabilities">Schopnosti</a>
+      <a href="#safety">Bezpečnosť</a>
+      <a href="#contact" class="btn-primary">Požiadať o pilot</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="light-blob blob-1"></div>
+    <div class="light-blob blob-2"></div>
+    
+    <div class="particles" id="particles"></div>
+    
+    <div class="orbital-ring"></div>
+    
+    <div class="android-container" id="android">
+      <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=900&fit=crop" alt="CyberLife Android">
+    </div>
+    
+    <div class="hero-content">
+      <h1 class="fade-in">
+        Humanoidná podpora,<br>
+        <span class="text-gradient">navrhnutá pre skutočný život.</span>
+      </h1>
+      <p class="fade-in">
+        CyberLife pomáha s každodennými úlohami, podporuje opatrovateľov a pomáha ľuďom zostať v kontakte — bezpečne, jasne a s láskou.
+      </p>
+      <span class="hero-label fade-in">Teraz prijímame partnerov do pilotného programu</span>
+      <div class="hero-buttons fade-in">
+        <a href="#contact" class="btn-primary">
+          Požiadať o pilot
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="#capabilities" class="btn-outline">Preskúmať schopnosti</a>
+      </div>
+    </div>
+    
+    <div class="scroll-indicator" onclick="document.getElementById('assistance').scrollIntoView({behavior: 'smooth'})">
+      <span>Scroll</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    </div>
+  </section>
+
+  <!-- Assistance Section -->
+  <section class="feature-section" id="assistance">
+    <div class="feature-content slide-left">
+      <h2>Pomoc s každodennými úlohami.</h2>
+      <p>Od pripomínania liekov po jemnú podporu mobility — CyberLife zvláda rutinné úlohy, aby sa opatrovatelia mohli venovať ľuďom.</p>
+      <a href="#capabilities" style="color: var(--cyber-blue); text-decoration: none; font-weight: 500;">Pozrite si, ako asistencia funguje →</a>
+      
+      <div class="radial-menu" id="radialMenu1">
+        <!-- Radial items will be positioned by JS -->
+      </div>
+    </div>
+    <div class="feature-image slide-right">
+      <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=800&h=600&fit=crop" alt="Opatrovateľka pomáha klientovi">
+    </div>
+  </section>
+
+  <!-- Companionship Section -->
+  <section class="feature-section reverse" id="companionship">
+    <div class="feature-content slide-right">
+      <h2>Spoločnosť, keď to najviac potrebujete.</h2>
+      <p>Konverzácia, pripomienky a pokojná prítomnosť — navrhnuté na zníženie osamelosti a podporu pohody.</p>
+      
+      <div class="radial-menu" id="radialMenu2"></div>
+    </div>
+    <div class="feature-image slide-left">
+      <img src="https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=800&h=600&fit=crop" alt="Spokojný senior">
+    </div>
+  </section>
+
+  <!-- Connection Section -->
+  <section class="feature-section" id="connection">
+    <div class="feature-content slide-left">
+      <h2>Priblížte rodiny k sebe.</h2>
+      <p>CyberLife nastavuje videohovory, zdieľa aktualizácie a drží rodiny v spojení — bez pridania práce pre personál.</p>
+      <a href="#contact" style="color: var(--cyber-blue); text-decoration: none; font-weight: 500;">Nastaviť hovor za pár sekúnd →</a>
+      
+      <div class="radial-menu" id="radialMenu3"></div>
+    </div>
+    <div class="feature-image slide-right">
+      <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&h=600&fit=crop" alt="Videohovor s rodinou">
+    </div>
+  </section>
+
+  <!-- Capabilities Section -->
+  <section class="capabilities" id="capabilities">
+    <div style="text-align: center; max-width: 700px; margin: 0 auto;">
+      <h2 class="fade-in">Vybavené pre skutočné prostredie starostlivosti.</h2>
+      <p class="fade-in" style="color: var(--cyber-text-secondary); margin-top: 1rem;">
+        CyberLife zvláda rutinné úlohy, komunikuje jasne a uchováva dáta v súkromí — aby sa personál mohol venovať ľuďom, nie papierovačkám.
+      </p>
+    </div>
+    
+    <div class="capabilities-grid">
+      <div class="capability-card fade-in">
+        <div class="capability-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Navigácia</h3>
+        <p>Autonómna chôdza, vyhýbanie sa prekážkam, bezpečné zastavenie.</p>
+      </div>
+      
+      <div class="capability-card fade-in">
+        <div class="capability-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>Interakcia</h3>
+        <p>Reč, gestá, rozpoznávanie tváre, pokojné odpovede.</p>
+      </div>
+      
+      <div class="capability-card fade-in">
+        <div class="capability-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3>Súkromie</h3>
+        <p>Spracovanie na zariadení, šifrované dáta, jasný súhlas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Safety Section -->
+  <section class="safety" id="safety">
+    <div class="safety-header fade-in">
+      <h2>Bezpečnosť a etika na prvom mieste.</h2>
+      <p>CyberLife je navrhnutý s jasnými hranicami: ľudský dohľad, transparentné postupy práce s dátami a možnosť kedykoľvek zastaviť alebo pozastaviť.</p>
+    </div>
+    
+    <div class="safety-grid">
+      <div class="safety-card fade-in">
+        <div class="safety-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3>Ľudský dohľad</h3>
+        <p>Opatrovatelia stanovujú hranice. Systém podporuje; nenahradzuje úsudok človeka.</p>
+      </div>
+      
+      <div class="safety-card fade-in">
+        <div class="safety-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <h3>Transparentné dáta</h3>
+        <p>Jasný súhlas, šifrované úložisko a auditovateľné záznamy.</p>
+      </div>
+      
+      <div class="safety-card fade-in">
+        <div class="safety-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Zastavenie kedykoľvek</h3>
+        <p>Klienti a rodiny môžu okamžite pozastaviť alebo ukončiť používanie.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="contact-grid">
+      <div class="contact-content fade-in">
+        <h2>Prineste CyberLife<br><span class="text-gradient">do vášho tímu.</span></h2>
+        <p>Spolupracujeme s domovmi sociálnych služieb, klinikami a zdravotnými systémami. Poďme sa porozprávať o pilotnom programe.</p>
+        
+        <div class="stats">
+          <div class="stat">
+            <h3>100+</h3>
+            <p>Pilotných zariadení</p>
+          </div>
+          <div class="stat">
+            <h3>12</h3>
+            <p>Mesačný pilot</p>
+          </div>
+          <div class="stat">
+            <h3>24/7</h3>
+            <p>Technická podpora</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="contact-form fade-in" id="contactForm">
+        <form onsubmit="handleSubmit(event)">
+          <div class="form-group">
+            <label>Meno</label>
+            <input type="text" placeholder="Vaše meno" required>
+          </div>
+          <div class="form-group">
+            <label>Organizácia</label>
+            <input type="text" placeholder="Názov organizácie" required>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="vas@email.sk" required>
+          </div>
+          <div class="form-group">
+            <label>Rola</label>
+            <select>
+              <option>Opatrovateľ/ka</option>
+              <option>Manažér/ka</option>
+              <option>Klinický pracovník</option>
+              <option>Iné</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Správa</label>
+            <textarea placeholder="Ako vám môžeme pomôcť?"></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+            Požiadať o hovor
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#">Súkromie</a>
+        <a href="#">Podmienky</a>
+        <a href="#">Compliance</a>
+        <a href="#">Tlačové materiály</a>
+      </div>
+      <p class="footer-manifest">„Budúcnosť starostlivosti je ľudská. My ju len podporujeme."</p>
+      <p class="footer-copy">© 2026 CyberLife Robotics</p>
+    </div>
+  </footer>
+
+  <script>
+    // Create particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 4 + 's';
+      particlesContainer.appendChild(particle);
+    }
+
+    // Mouse glow effect
+    const mouseGlow = document.getElementById('mouseGlow');
+    const android = document.getElementById('android');
+    const featureImages = document.querySelectorAll('.feature-image');
+
+    document.addEventListener('mousemove', (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      
+      // Move glow
+      mouseGlow.style.transform = `translate(${x - 150}px, ${y - 150}px)`;
+      
+      // Parallax on android
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const moveX = (x - centerX) / centerX * 15;
+      const moveY = (y - centerY) / centerY * 10;
+      
+      if (android) {
+        android.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
+      }
+      
+      // Parallax on feature images
+      featureImages.forEach(img => {
+        const rect = img.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          const imgMoveX = (x - centerX) / centerX * -8;
+          const imgMoveY = (y - centerY) / centerY * -5;
+          img.style.transform = `translate(${imgMoveX}px, ${imgMoveY}px)`;
+        }
+      });
+    });
+
+    // Navigation scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Intersection Observer for animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in, .slide-left, .slide-right, .scale-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Create radial menus
+    const radialItems1 = [
+      { icon: 'pill', label: 'Lieky' },
+      { icon: 'accessibility', label: 'Mobilita' },
+      { icon: 'utensils', label: 'Jedlo' },
+      { icon: 'calendar', label: 'Plán' },
+      { icon: 'shield', label: 'Bezpečnosť' },
+      { icon: 'file', label: 'Dokumenty' }
+    ];
+
+    const radialItems2 = [
+      { icon: 'message', label: 'Rozhovor' },
+      { icon: 'bell', label: 'Pripomienky' },
+      { icon: 'moon', label: 'Tichý režim' },
+      { icon: 'book', label: 'Čítanie' },
+      { icon: 'music', label: 'Hudba' },
+      { icon: 'eye', label: 'Kontroly' }
+    ];
+
+    const radialItems3 = [
+      { icon: 'video', label: 'Video' },
+      { icon: 'refresh', label: 'Aktualizácie' },
+      { icon: 'image', label: 'Fotky' },
+      { icon: 'bell2', label: 'Pripomienky' },
+      { icon: 'mic', label: 'Hlas' },
+      { icon: 'accessibility2', label: 'Prístup' }
+    ];
+
+    function createRadialMenu(containerId, items) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      
+      items.forEach((item, index) => {
+        const angle = (index * 60 - 90) * (Math.PI / 180);
+        const radius = 100;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        
+        const div = document.createElement('div');
+        div.className = 'radial-item';
+        div.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+        div.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+          <span>${item.label}</span>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    createRadialMenu('radialMenu1', radialItems1);
+    createRadialMenu('radialMenu2', radialItems2);
+    createRadialMenu('radialMenu3', radialItems3);
+
+    // Form submission
+    function handleSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('contactForm');
+      form.innerHTML = `
+        <div class="success-message">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <h3>Ďakujeme za záujem!</h3>
+          <p>Budeme vás kontaktovať do 24 hodín.</p>
+        </div>
+      `;
+    }
+
+    // Initial hero animation
+    setTimeout(() => {
+      document.querySelectorAll('.hero .fade-in').forEach((el, i) => {
+        setTimeout(() => {
+          el.classList.add('visible');
+        }, i * 200);
+      });
+    }, 300);
+  </script>
+</body>
 </html>
